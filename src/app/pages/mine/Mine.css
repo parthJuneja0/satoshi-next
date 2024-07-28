@@ -1,0 +1,189 @@
+/* Mine.css */
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background: #272a2f;
+  border-radius: 16px 16px 0 0;
+}
+
+.tabs button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.tabs button.active,
+.tabs button:hover {
+  background: #1d2025;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
+  transform: scale(1.05);
+}
+
+.mine-content {
+  /* background: #1d2025; */
+  border-radius: 0 0 46px 46px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 100%;
+}
+
+.card {
+  background: #272a2f;
+  border-radius: 16px;
+  padding: 6px 4px;
+  text-align: left;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  /* Reduced white glow shadow */
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.card-header .icon {
+  font-size: 3rem;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.card-separator {
+  height: 1px;
+  background: #fff;
+  opacity: 0.2;
+  margin: 10px 0;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #fff;
+  position: relative;
+}
+
+.card-footer .footer-icon {
+  margin-right: 5px;
+}
+
+.vertical-separator {
+  width: 1px;
+  height: 36px;
+  /* Increased height */
+  background: #fff;
+  opacity: 0.2;
+  margin: 0 10px;
+}
+
+.title {
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.profit {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.profit-amount {
+  font-size: 1rem;
+  color: #fff;
+  font-weight: bold;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+  /* Enhanced shadow */
+}
+
+.card:hover .icon {
+  color: #f3ba2f;
+}
+
+.colorful-icon {
+  color: #f39c12;
+}
+
+.bright-coin-icon {
+  color: #ffd700;
+}
+
+@media (max-width: 768px) {
+  .card-grid {
+    gap: 15px;
+  }
+
+  .card {
+    padding: 5px 3px;
+  }
+
+  .card-header .icon {
+    font-size: 2.5rem;
+    margin-right: 8px;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .profit {
+    font-size: 0.8rem;
+  }
+
+  .profit-amount {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-grid {
+    gap: 10px;
+  }
+
+  .tabs button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+
+  .card {
+    padding: 4px 2px;
+  }
+
+  .card-header .icon {
+    font-size: 2rem;
+    margin-right: 6px;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .profit {
+    font-size: 0.7rem;
+  }
+
+  .profit-amount {
+    font-size: 0.8rem;
+  }
+}
