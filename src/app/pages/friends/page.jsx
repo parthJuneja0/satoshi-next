@@ -1,18 +1,17 @@
-"use client";
 import React from "react";
 import { FaGift, FaUserPlus, FaUserFriends } from "react-icons/fa";
 import "./Friends.css"; // Ensure you create and use this CSS file for additional styles
 
 const page = () => {
-  const inviteLink = "https://yourapp.com/invite";
-  const telegramMessage = `Join me on this amazing app and receive bonuses! ${inviteLink}`;
+  // const inviteLink = "https://yourapp.com/invite";
+  // const telegramMessage = `Join me on this amazing app and receive bonuses! ${inviteLink}`;
 
-  const handleTelegramInvite = () => {
-    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
-      inviteLink
-    )}&text=${encodeURIComponent(telegramMessage)}`;
-    window.open(telegramUrl, "_blank");
-  };
+  // const handleTelegramInvite = () => {
+  //   const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
+  //     inviteLink
+  //   )}&text=${encodeURIComponent(telegramMessage)}`;
+  //   window.open(telegramUrl, "_blank");
+  // };
 
   return (
     <div className="bg-gradient-to-b from-gray-900 to-black flex justify-center items-center min-h-screen">
@@ -57,7 +56,9 @@ const page = () => {
           </div>
           <button
             className="mt-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-3 rounded-xl w-full hover:bg-gradient-to-l transition-colors duration-300 glow"
-            onClick={handleTelegramInvite}
+            // onClick={() => {
+            //   handleTelegramInvite();
+            // }}
           >
             Invite via Telegram
           </button>

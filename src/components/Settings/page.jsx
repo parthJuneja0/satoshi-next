@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import "./Settings.css";
@@ -27,7 +26,9 @@ const Settings = ({ toggleSettings }) => {
               onClick={toggleSettings}
             />
           </div>
-          <h1 className="text-3xl text-center flex-1 gradient-text">Settings</h1>
+          <h1 className="text-3xl text-center flex-1 gradient-text">
+            Settings
+          </h1>
         </div>
 
         <div className="settings-list mb-6">
@@ -62,9 +63,7 @@ const Settings = ({ toggleSettings }) => {
               <button
                 className="settings-button text-red-500"
                 onClick={toggleModal}
-              >
-                
-              </button>
+              ></button>
             </div>
           </div>
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaExchangeAlt, FaUserFriends, FaCoins, FaGift } from "react-icons/fa";
 import { BsMinecart } from "react-icons/bs";
 import Link from "next/link";

@@ -1,5 +1,5 @@
 "use client";
-import { useState, Suspense, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 // Icon imports
 import { FiDollarSign } from "react-icons/fi";
@@ -204,7 +204,9 @@ export default function Home() {
                   <div className="flex items-center space-x-2 pt-4">
                     <div
                       className="p-1 rounded-lg bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 cursor-pointer"
-                      onClick={toggleLeaderboard}
+                      onClick={() => {
+                        toggleLeaderboard();
+                      }}
                     >
                       <FaUserCircle size={24} className="text-white" />
                     </div>
@@ -219,7 +221,9 @@ export default function Home() {
                   <div className="flex items-center justify-between mt-4">
                     <div
                       className="flex items-center cursor-pointer"
-                      onClick={toggleLeaderboard}
+                      onClick={() => {
+                        toggleLeaderboard();
+                      }}
                     >
                       <div className="flex flex-col items-start">
                         <div className="w-full justify-between flex">
@@ -255,7 +259,9 @@ export default function Home() {
                         </div>
                         <div className="h-[32px] w-[2px] bg-gray-700 mx-2"></div>
                         <IoMdSettings
-                          onClick={toggleSettings}
+                          onClick={() => {
+                            toggleSettings();
+                          }}
                           className="text-yellow-400 cursor-pointer"
                         />
                       </div>
