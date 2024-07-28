@@ -21,9 +21,10 @@ import Settings from "../components/Settings/page";
 export default function Home() {
   function Search() {
     const { userData } = useUserData();
-    console.log(userData);
     const userId = userData?.id || 0;
-    const username = userData?.username || "Guest";
+    const firstName = userData?.first_name || "Guest";
+    const secondName = userData?.second_name || "Account";
+    const username = `${firstName} ${secondName}`;
 
     const coinLevelGap = 1000;
     // const [energyValued, setEnergyValued] = useState(false);
