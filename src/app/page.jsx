@@ -23,8 +23,8 @@ export default function Home() {
     const { userData } = useUserData();
     const userId = userData?.id || 0;
     const firstName = userData?.first_name || "Guest";
-    const secondName = userData?.second_name || "Account";
-    const username = `${firstName} ${secondName}`;
+    const lastName = userData?.last_name || "Account";
+    const username = `${firstName} ${lastName}`;
 
     const coinLevelGap = 1000;
     // const [energyValued, setEnergyValued] = useState(false);

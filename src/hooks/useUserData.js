@@ -12,7 +12,7 @@ export default function useUserData() {
             userData = {
                 id: 0,
                 first_name: "Guest",
-                second_name: "Account",
+                last_name: "Account",
             };
         }
     }
