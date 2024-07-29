@@ -43,7 +43,7 @@
 }
 
 .card {
-  background: #272a2f;
+  background: #384356;
   border-radius: 16px;
   padding: 6px 4px;
   text-align: left;
@@ -53,6 +53,18 @@
   cursor: pointer;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   /* Reduced white glow shadow */
+}
+
+.locked_card {
+  background: #171717;
+  border-radius: 16px;
+  padding: 6px 4px;
+  text-align: left;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
 .card-header {

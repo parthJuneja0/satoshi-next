@@ -33,7 +33,7 @@ export default function Home() {
     const [totalEnergy, setTotalEnergy] = useState();
     const [currentEnergy, setCurrentEnergy] = useState(1000);
     const [level, setLevel] = useState();
-    const [profitPerHour, setProfitPerHour] = useState(36000);
+    const [profitPerHour, setProfitPerHour] = useState();
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [leaderboardOpen, setLeaderboardOpen] = useState(false);
     const [imageClicked, setImageClicked] = useState(false);
@@ -62,6 +62,12 @@ export default function Home() {
           totalEnergy: 1500,
           currentEnergy: 1500,
           level: 1,
+          profitPerHour: 0,
+          completedTasks: {
+            youtube: false,
+            telegram: false,
+            twitter: false,
+          },
         });
       }
     });
@@ -72,6 +78,7 @@ export default function Home() {
     const totalEnergyRef = child(userRef, "totalEnergy");
     // const currentEnergyRef = child(userRef, "currentEnergy");
     const levelRef = child(userRef, "level");
+    const profitPerHourRef = child(userRef, "profitPerHour");
 
     // database useEffects
     useEffect(() => {
@@ -110,6 +117,13 @@ export default function Home() {
       });
       return () => unsubscribe();
     }, [levelRef]);
+
+    useEffect(() => {
+      const unsubscribe = onValue(profitPerHourRef, (snapshot) => {
+        setProfitPerHour(snapshot.val());
+      });
+      return () => unsubscribe();
+    }, [profitPerHourRef]);
 
     const handleCardClick = (e) => {
       if (e.target.tagName === "IMG" && coinValued) {
@@ -219,30 +233,31 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="flex items-center mt-4">
-                    <div className="flex flex-col items-start w-1/2"> {/* Adjusted width to 50% */}
-                      <div className="flex justify-between w-full mb-1">
-                        <p className="text-xs text-gray-600">Energy</p>
-                        <p className="text-xs text-gray-600">{`${currentEnergy}/${totalEnergy}`}</p>
-                      </div>
-                      <div className="w-full h-3 bg-gray-200 rounded-full relative overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-green-400 to-green-600 transition-width duration-300 ease-in-out shadow-lg"
-                          style={{
-                            width: `${(currentEnergy * 100) / totalEnergy}%`,
-                            boxShadow: '0 0 8px rgba(0, 255, 0, 0.5)', // Added glow effect
-                          }}
-                        ></div>
-                        <div
-                          className="absolute top-0 transform -translate-x-1/2 h-3 w-3 rounded-full bg-green-500 shadow-md glow-pulse transition-left duration-300 ease-in-out"
-                          style={{
-                            left: `${(currentEnergy * 100) / totalEnergy}%`,
-                            boxShadow: '0 0 8px rgba(0, 255, 0, 0.5)', // Added glow effect
-                          }}
-                        ></div>
+                      <div className="flex flex-col items-start w-1/2">
+                        {" "}
+                        {/* Adjusted width to 50% */}
+                        <div className="flex justify-between w-full mb-1">
+                          <p className="text-xs text-gray-600">Energy</p>
+                          <p className="text-xs text-gray-600">{`${currentEnergy}/${totalEnergy}`}</p>
+                        </div>
+                        <div className="w-full h-3 bg-gray-200 rounded-full relative overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-green-400 to-green-600 transition-width duration-300 ease-in-out shadow-lg"
+                            style={{
+                              width: `${(currentEnergy * 100) / totalEnergy}%`,
+                              boxShadow: "0 0 8px rgba(0, 255, 0, 0.5)", // Added glow effect
+                            }}
+                          ></div>
+                          <div
+                            className="absolute top-0 transform -translate-x-1/2 h-3 w-3 rounded-full bg-green-500 shadow-md glow-pulse transition-left duration-300 ease-in-out"
+                            style={{
+                              left: `${(currentEnergy * 100) / totalEnergy}%`,
+                              boxShadow: "0 0 8px rgba(0, 255, 0, 0.5)", // Added glow effect
+                            }}
+                          ></div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-
                   </div>
                   <div className="flex-grow mt-4 mb-16 bg-gradient-to-b from-gray-800 to-gray-900 rounded-t-[48px] relative top-glow z-0">
                     <div className="absolute inset-0 flex items-center justify-center">

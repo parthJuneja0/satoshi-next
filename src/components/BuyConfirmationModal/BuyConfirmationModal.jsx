@@ -1,6 +1,5 @@
-import React from 'react';
-import './BuyConfirmationModal.css';
-import { GiTwoCoins } from 'react-icons/gi';
+import React from "react";
+import "./BuyConfirmationModal.css";
 const BuyConfirmationModal = ({ show, onClose, onConfirm, card }) => {
   if (!show) {
     return null;
@@ -10,10 +9,17 @@ const BuyConfirmationModal = ({ show, onClose, onConfirm, card }) => {
     <div className="modal-overlay">
       <div className="modal-content">
         <h2>Confirm Purchase</h2>
-        <p>Are you sure you want to buy the <strong>{card.title}</strong> card for <strong>{card.price} Coins</strong>?</p>
+        <p>
+          Are you sure you want to buy the <strong>{card.title}</strong> card
+          for <strong>{card.price} Coins</strong>?
+        </p>
         <div className="modal-actions">
-          <button className="btn cancel" onClick={onClose}>Cancel</button>
-          <button className="btn confirm" onClick={onConfirm}>Confirm</button>
+          <button className="btn cancel" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="btn confirm" onClick={onConfirm}>
+            Confirm
+          </button>
         </div>
       </div>
     </div>

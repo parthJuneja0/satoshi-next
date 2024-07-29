@@ -1,11 +1,18 @@
 "use client";
-import React, { useState } from "react";
-import { FaExchangeAlt, FaUserFriends, FaCoins, FaGift } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaExchangeAlt, FaUserFriends, FaCoins } from "react-icons/fa";
 import { BsMinecart } from "react-icons/bs";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
-  const [selected, setSelected] = useState("exchange");
+  const [selected, setSelected] = useState();
+  const pathname = usePathname();
+  useEffect(() => {
+    if (pathname === "/") setSelected("exchange");
+    else setSelected(pathname.split("/")[2]);
+    console.log(pathname);
+  }, [pathname]);
 
   const array = [
     {
@@ -61,10 +68,6 @@ const Footer = () => {
           href={item.name === "exchange" ? "/" : `/pages/${item.name}`}
           id={item.name}
           key={index}
-          onClick={(e) => {
-            e.stopPropagation();
-            setSelected(e.currentTarget.id);
-          }}
         >
           <div
             className={`flex flex-col items-between text-center w-20 p-2 rounded-2xl transition-all duration-200 cursor-pointer ${
@@ -84,124 +87,6 @@ const Footer = () => {
           </div>
         </Link>
       ))}
-      {/* <Link
-        href={`/`}
-        id="exchange"
-        key={index}
-        onClick={(e) => {
-          e.stopPropagation();
-          setSelected(e.currentTarget.id);
-        }}
-      >
-        <div
-          className={`text-center w-20 p-2 rounded-2xl transition-all duration-200 cursor-pointer ${
-            selected === "exchange"
-              ? " bg-gray-700 text-white shadow-md shadow-yellow-500"
-              : "bg-gray-800 text-gray-500"
-          }`}
-        >
-          <FaExchangeAlt
-            className={`w-8 h-8 mx-auto ${
-              selected === "exchange" ? "text-white" : "text-gray-500"
-            }`}
-          />
-          <p
-            className={`mt-1 ${
-              selected === "exchange" ? "text-white" : "text-gray-500"
-            }`}
-          >
-            Exchange
-          </p>
-        </div>
-      </Link>
-
-      <Link
-        href={`/pages/friends`}
-        id="friends"
-        onClick={(e) => {
-          e.stopPropagation();
-          setSelected(e.currentTarget.id);
-        }}
-      >
-        <div
-          className={`text-center w-20 p-2 rounded-2xl transition-all duration-200 cursor-pointer ${
-            selected === "friends"
-              ? " bg-gray-700 text-white shadow-md shadow-yellow-500"
-              : "bg-gray-800 text-gray-500"
-          }`}
-        >
-          <FaUserFriends
-            className={`w-8 h-8 mx-auto ${
-              selected === "friends" ? "text-white" : "text-gray-500"
-            }`}
-          />
-          <p
-            className={`mt-1 ${
-              selected === "friends" ? "text-white" : "text-gray-500"
-            }`}
-          >
-            Friends
-          </p>
-        </div>
-      </Link>
-      <Link
-        href={`/pages/earn`}
-        id="earn"
-        onClick={(e) => {
-          e.stopPropagation();
-          setSelected(e.currentTarget.id);
-        }}
-      >
-        <div
-          className={`text-center w-20 p-2 rounded-2xl transition-all duration-200 cursor-pointer ${
-            selected === "earn"
-              ? " bg-gray-700 text-white shadow-md shadow-yellow-500"
-              : "bg-gray-800 text-gray-500"
-          }`}
-        >
-          <FaCoins
-            className={`w-8 h-8 mx-auto ${
-              selected === "earn" ? "text-white" : "text-gray-500"
-            }`}
-          />
-          <p
-            className={`mt-1 ${
-              selected === "earn" ? "text-white" : "text-gray-500"
-            }`}
-          >
-            Earn
-          </p>
-        </div>
-      </Link>
-      <Link
-        href={`/pages/mine`}
-        id="mine"
-        onClick={(e) => {
-          e.stopPropagation();
-          setSelected(e.currentTarget.id);
-        }}
-      >
-        <div
-          className={`text-center w-20 p-2 rounded-2xl transition-all duration-200 cursor-pointer ${
-            selected === "mine"
-              ? " bg-gray-700 text-white shadow-md shadow-yellow-500"
-              : "bg-gray-800 text-gray-500"
-          }`}
-        >
-          <BsMinecart
-            className={`w-8 h-8 mx-auto ${
-              selected === "mine" ? "text-white" : "text-gray-500"
-            }`}
-          />
-          <p
-            className={`mt-1 ${
-              selected === "mine" ? "text-white" : "text-gray-500"
-            }`}
-          >
-            Mine
-          </p>
-        </div>
-      </Link> */}
     </div>
   );
 };
