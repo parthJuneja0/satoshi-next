@@ -50,12 +50,14 @@ const Earn = () => {
       set(coinRef, coinCount + reward);
     };
 
-    const handleLinkClick = (task) => {
+    const handleLinkClick = async (task) => {
       setLoading(true);
-      setTimeout(() => {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate delay
         set(completedTasksRef, { ...completedTasks, [task]: true });
+      } finally {
         setLoading(false);
-      }, 2000); // Simulating network delay
+      }
       grantReward(task);
     };
 

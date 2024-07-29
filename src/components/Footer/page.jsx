@@ -1,18 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FaExchangeAlt, FaUserFriends, FaCoins } from "react-icons/fa";
 import { BsMinecart } from "react-icons/bs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const Footer = () => {
-  const [selected, setSelected] = useState();
   const pathname = usePathname();
-  useEffect(() => {
-    if (pathname === "/") setSelected("exchange");
-    else setSelected(pathname.split("/")[2]);
-    console.log(pathname);
-  }, [pathname]);
+  function getPathName() {
+    if (pathname === "/") return "exchange";
+    else return pathname.split("/")[2];
+  }
+
+  const selectedPage = getPathName();
 
   const array = [
     {
@@ -20,7 +20,7 @@ const Footer = () => {
       icon: (
         <FaExchangeAlt
           className={`mx-auto ${
-            selected === "exchange" ? "text-white" : "text-gray-500"
+            selectedPage === "exchange" ? "text-white" : "text-gray-500"
           }`}
           size={28}
         />
@@ -31,7 +31,7 @@ const Footer = () => {
       icon: (
         <BsMinecart
           className={`mx-auto ${
-            selected === "mine" ? "text-white" : "text-gray-500"
+            selectedPage === "mine" ? "text-white" : "text-gray-500"
           }`}
           size={28}
         />
@@ -42,7 +42,7 @@ const Footer = () => {
       icon: (
         <FaUserFriends
           className={`mx-auto ${
-            selected === "friends" ? "text-white" : "text-gray-500"
+            selectedPage === "friends" ? "text-white" : "text-gray-500"
           }`}
           size={28}
         />
@@ -53,7 +53,7 @@ const Footer = () => {
       icon: (
         <FaCoins
           className={`mx-auto ${
-            selected === "earn" ? "text-white" : "text-gray-500"
+            selectedPage === "earn" ? "text-white" : "text-gray-500"
           }`}
           size={28}
         />
@@ -71,7 +71,7 @@ const Footer = () => {
         >
           <div
             className={`flex flex-col items-between text-center w-20 p-2 rounded-2xl transition-all duration-200 cursor-pointer ${
-              selected === item.name
+              selectedPage === item.name
                 ? " bg-gray-700 text-white shadow-md shadow-yellow-500"
                 : "bg-gray-800 text-gray-500"
             }`}
@@ -79,7 +79,7 @@ const Footer = () => {
             {item.icon}
             <p
               className={`mt-1 ${
-                selected === item.name ? "text-white" : "text-gray-500"
+                selectedPage === item.name ? "text-white" : "text-gray-500"
               }`}
             >
               {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
