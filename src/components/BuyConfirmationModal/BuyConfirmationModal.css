@@ -1,83 +1,170 @@
 /* BuyConfirmationModal.css */
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1E1E2E;
+  border-radius: 16px;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #4CAF50;
+  padding-bottom: 10px;
+}
+
+.modal-header .title {
+  font-size: 1.5rem;
+  color: #FFFFFF;
+}
+
+.modal-header .close {
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.modal-header .close:hover {
+  color: #FF5722;
+}
+
+.modal-body {
+  margin-top: 20px;
+  color: #B0BEC5;
+  font-size: 1rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.modal-footer button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.modal-footer .confirm {
+  background: #4CAF50;
+  color: #FFFFFF;
+}
+
+.modal-footer .confirm:hover {
+  background: #388E3C;
+  transform: scale(1.05);
+}
+
+.modal-footer .cancel {
+  background: #FF5722;
+  color: #FFFFFF;
+}
+
+.modal-footer .cancel:hover {
+  background: #E64A19;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Overlay to darken background when modal is open */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  animation: fadeInOverlay 0.3s ease-in-out;
 }
 
-.modal-content {
-  background: #1d2025;
-  border-radius: 16px;
-  padding: 30px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-  position: relative;
-  overflow: hidden;
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.modal-content::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, rgba(243, 186, 47, 0.1), rgba(255, 255, 255, 0.1));
-  pointer-events: none;
+@media (max-width: 768px) {
+  .modal {
+    width: 95%;
+    padding: 15px;
+    max-width: 350px;
+  }
+
+  .modal-header .title {
+    font-size: 1.2rem;
+  }
+
+  .modal-body {
+    font-size: 0.9rem;
+  }
+
+  .modal-footer button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
 }
 
-.modal-content h2 {
-  color: #fff;
-  margin-bottom: 20px;
-  font-size: 1.8rem;
-}
+@media (max-width: 480px) {
+  .modal {
+    width: 100%;
+    padding: 10px;
+    max-width: 320px;
+  }
 
-.modal-content p {
-  color: #aaa;
-  margin-bottom: 30px;
-  font-size: 1.2rem;
-}
+  .modal-header .title {
+    font-size: 1rem;
+  }
 
-.modal-actions {
-  display: flex;
-  justify-content: space-around;
-}
+  .modal-header .close {
+    font-size: 1.2rem;
+  }
 
-.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
-  font-size: 1rem;
-}
+  .modal-body {
+    font-size: 0.8rem;
+  }
 
-.btn.cancel {
-  background: #d9534f;
-  color: #fff;
-}
+  .modal-footer {
+    flex-direction: column;
+    align-items: center;
+  }
 
-.btn.confirm {
-  background: #5cb85c;
-  color: #fff;
-}
-
-.btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-}
-
-.btn:active {
-  transform: scale(1);
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+  .modal-footer button {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1rem;
+    margin: 5px 0;
+  }
 }
