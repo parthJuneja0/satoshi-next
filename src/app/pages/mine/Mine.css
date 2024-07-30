@@ -55,14 +55,11 @@
   /* background-image: url('path_to_texture.png');  */
   background-size: cover;
   background-repeat: no-repeat;
-  /* min-height: 200px; */
 }
 
 .card.animals {
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), /* bright yellow glow */
               inset 0 0 10px rgba(0, 0, 0, 0.5); /* Inner shadow */
-  background: linear-gradient(135deg, #384356 0%, #2c2f36 100%);
-  background-blend-mode: overlay;
 }
 
 .card.trees {
@@ -92,7 +89,6 @@
   cursor: pointer;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  /* min-height: 200px; */
 }
 
 .card-header {
@@ -173,10 +169,10 @@
   .card-grid {
     gap: 15px;
   }
-/* 
+
   .card {
     padding: 15px;
-  } */
+  }
 
   .card-header .icon {
     font-size: 2.5rem;
@@ -205,10 +201,10 @@
     padding: 8px 15px;
     font-size: 0.9rem;
   }
-/* 
+
   .card {
     padding: 10px;
-  } */
+  }
 
   .card-header .icon {
     font-size: 2rem;

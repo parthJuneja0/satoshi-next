@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
       <head>
         <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
       </head>
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} flex justify-center items-center`}>
         {children}
         <Footer />
       </body>
