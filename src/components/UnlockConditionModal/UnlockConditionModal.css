@@ -35,6 +35,7 @@
   font-size: 1.5rem;
   cursor: pointer;
   transition: color 0.3s;
+  margin-left: auto;
 }
 
 .modal-header .close:hover {
@@ -62,22 +63,13 @@
   transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
-.modal-footer .confirm {
-  background: #4CAF50;
-  color: #FFFFFF;
-}
-
-.modal-footer .confirm:hover {
-  background: #388E3C;
-  box-shadow: 0 0 10px #4CAF50;
-}
-
-.modal-footer .cancel {
+.modal-footer .close {
   background: #FF5722;
   color: #FFFFFF;
+  margin-left: auto;
 }
 
-.modal-footer .cancel:hover {
+.modal-footer .close:hover {
   background: #E64A19;
   box-shadow: 0 0 10px #FF5722;
 }
