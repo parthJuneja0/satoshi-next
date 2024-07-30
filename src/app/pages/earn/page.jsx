@@ -4,7 +4,7 @@ import { FaYoutube, FaTelegramPlane, FaCheckCircle } from "react-icons/fa";
 import { GiTwoCoins } from "react-icons/gi";
 import { SiX } from "react-icons/si";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { onValue, ref, set } from "firebase/database";
+import { onValue, ref, set, update } from "firebase/database";
 import { realtimeDb } from "@/config/firebase";
 import useUserData from "@/hooks/useUserData";
 
@@ -13,7 +13,6 @@ const Earn = () => {
     let youtubeReward = 10000;
     let telegramReward = 5000;
     let twitterReward = 5000;
-    const [loading, setLoading] = useState(false);
     const [coinCount, setCoinCount] = useState();
     const [completedTasks, setCompletedTasks] = useState();
 
@@ -51,23 +50,13 @@ const Earn = () => {
     };
 
     const handleLinkClick = async (task) => {
-      setLoading(true);
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate delay
-        set(completedTasksRef, { ...completedTasks, [task]: true });
-      } finally {
-        setLoading(false);
-      }
+      if (completedTasks && completedTasks[task]) return;
+      update(completedTasksRef, { [task]: true });
       grantReward(task);
     };
 
     return (
       <div className="bg-gradient-to-b from-gray-900 to-black flex justify-center items-center min-h-screen">
-        {loading && (
-          <div className="absolute z-50 flex items-center justify-center bg-black bg-opacity-75 w-full h-full">
-            <AiOutlineLoading3Quarters className="text-white text-6xl animate-spin" />
-          </div>
-        )}
         <div className="w-full h-full rounded-3xl p-6 text-white max-w-md relative">
           <div className="flex justify-center mb-8">
             <GiTwoCoins className="text-yellow-400 text-9xl shadow-lg animate-pulse transition-transform duration-500 ease-in-out transform hover:scale-110 glow-coin" />
