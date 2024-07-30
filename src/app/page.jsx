@@ -13,7 +13,7 @@ import useUserData from "@/hooks/useUserData";
 
 // Database imports
 import { realtimeDb } from "@/config/firebase";
-import { onValue, ref, set, child, update } from "firebase/database";
+import { ref, set, get } from "firebase/database";
 import Image from "next/image";
 import Leaderboard from "../components/Leaderboard/page";
 import Settings from "../components/Settings/page";
@@ -26,20 +26,111 @@ export default function Home() {
     const lastName = userData?.last_name || "Account";
     const username = `${firstName} ${lastName}`;
 
-    const coinLevelGap = 1000;
-    // const [energyValued, setEnergyValued] = useState(false);
-    const [coinCount, setCoinCount] = useState();
-    const [pointsToAdd, setPointsToAdd] = useState();
-    const [totalEnergy, setTotalEnergy] = useState();
-    const [currentEnergy, setCurrentEnergy] = useState(1000);
-    const [level, setLevel] = useState();
-    const [profitPerHour, setProfitPerHour] = useState();
+    const [userInfo, setUserInfo] = useState({
+      username,
+      coins: 0,
+      pointsToAdd: 1,
+      totalEnergy: 1500,
+      currentEnergy: 1500,
+      yieldPerHour: 0,
+      completedTasks: {
+        youtube: false,
+        telegram: false,
+        twitter: false,
+      },
+    });
+    const [hasMounted, setHasMounted] = useState(false);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [leaderboardOpen, setLeaderboardOpen] = useState(false);
     const [imageClicked, setImageClicked] = useState(false);
-    const [coinValued, setCoinValued] = useState(false);
     const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
     const [showAnimation, setShowAnimation] = useState(false);
+
+    // Database references
+    const usersRef = ref(realtimeDb, `/users`);
+    const userRef = ref(realtimeDb, `/users/${userId}`);
+
+    // fetch user data
+    useEffect(() => {
+      const fetchUserDetails = async () => {
+        const snapshot = await get(userRef);
+        if (snapshot.exists()) {
+          setUserInfo(snapshot.val());
+          setHasMounted(true);
+        } else {
+          // Set initial values only if user doesn't exist
+          await set(userRef, {
+            username,
+            coins: 0,
+            pointsToAdd: 1,
+            totalEnergy: 1500,
+            currentEnergy: 1500,
+            yieldPerHour: 0,
+            completedTasks: {
+              youtube: false,
+              telegram: false,
+              twitter: false,
+            },
+          });
+        }
+      };
+
+      fetchUserDetails();
+    }, []);
+
+    // Sync user data with database
+    useEffect(() => {
+      if (hasMounted) {
+        set(userRef, userInfo);
+      }
+    }, [userInfo, hasMounted]);
+
+    // // Increase energy every second
+    useEffect(() => {
+      if (!hasMounted) return;
+      const intervalId = setInterval(() => {
+        setUserInfo((prevValue) => ({
+          ...prevValue,
+          currentEnergy: Math.min(
+            prevValue.currentEnergy + 1,
+            prevValue.totalEnergy
+          ),
+        }));
+      }, 1000);
+      return () => clearInterval(intervalId);
+    }, [hasMounted, userInfo]);
+
+    // Increase coins as per yield per hour
+    useEffect(() => {
+      if (userInfo.yieldPerHour === 0 || !hasMounted) return;
+      const intervalId = setInterval(() => {
+        setUserInfo((prevValue) => ({
+          ...prevValue,
+          coins: prevValue.coins + 1,
+        }));
+      }, Math.floor(1 / (userInfo.yieldPerHour / 3600)) * 1000);
+      return () => clearInterval(intervalId);
+    }, [hasMounted, userInfo]);
+
+    const handleCardClick = (e) => {
+      if (e.target.tagName === "IMG" && hasMounted) {
+        setImageClicked(true);
+        setShowAnimation(true);
+        const rect = e.target.getBoundingClientRect();
+        setClickPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+        setUserInfo((prevValue) => ({
+          ...prevValue,
+          coins: prevValue.coins + prevValue.pointsToAdd,
+          currentEnergy: prevValue.currentEnergy - prevValue.pointsToAdd,
+        }));
+
+        if (navigator.vibrate) {
+          navigator.vibrate(100);
+        }
+        setTimeout(() => setShowAnimation(false), 500);
+        setTimeout(() => setImageClicked(false), 500);
+      }
+    };
 
     const toggleSettings = () => {
       setSettingsOpen(!settingsOpen);
@@ -47,106 +138,6 @@ export default function Home() {
 
     const toggleLeaderboard = () => {
       setLeaderboardOpen(!leaderboardOpen);
-    };
-
-    // Database references
-    const usersRef = ref(realtimeDb, `/users`);
-    const userRef = ref(realtimeDb, `/users/${userId}`);
-
-    onValue(userRef, (snapshot) => {
-      if (!snapshot.exists()) {
-        set(userRef, {
-          username: username,
-          coins: 0,
-          pointsToAdd: 1,
-          totalEnergy: 1500,
-          currentEnergy: 1500,
-          level: 1,
-          profitPerHour: 0,
-          completedTasks: {
-            youtube: false,
-            telegram: false,
-            twitter: false,
-          },
-        });
-      }
-    });
-
-    // Database refernces
-    const coinRef = child(userRef, "coins");
-    const pointsToAddRef = child(userRef, "pointsToAdd");
-    const totalEnergyRef = child(userRef, "totalEnergy");
-    // const currentEnergyRef = child(userRef, "currentEnergy");
-    const levelRef = child(userRef, "level");
-    const profitPerHourRef = child(userRef, "profitPerHour");
-
-    // database useEffects
-    useEffect(() => {
-      const unsubscribe = onValue(coinRef, (snapshot) => {
-        setCoinCount(snapshot.val());
-        setCoinValued(true);
-      });
-      return () => unsubscribe();
-    }, [coinRef]);
-
-    useEffect(() => {
-      const unsubscribe = onValue(pointsToAddRef, (snapshot) => {
-        setPointsToAdd(snapshot.val());
-      });
-      return () => unsubscribe();
-    }, [pointsToAddRef]);
-
-    useEffect(() => {
-      const unsubscribe = onValue(totalEnergyRef, (snapshot) => {
-        setTotalEnergy(snapshot.val());
-      });
-      return () => unsubscribe();
-    }, [totalEnergyRef]);
-
-    // useEffect(() => {
-    //   const unsubscribe = onValue(currentEnergyRef, (snapshot) => {
-    //     setCurrentEnergy(snapshot.val());
-    //     setEnergyValued(true);
-    //   });
-    //   return () => unsubscribe();
-    // }, [currentEnergyRef]);
-
-    useEffect(() => {
-      const unsubscribe = onValue(levelRef, (snapshot) => {
-        setLevel(snapshot.val());
-      });
-      return () => unsubscribe();
-    }, [levelRef]);
-
-    useEffect(() => {
-      const unsubscribe = onValue(profitPerHourRef, (snapshot) => {
-        setProfitPerHour(snapshot.val());
-      });
-      return () => unsubscribe();
-    }, [profitPerHourRef]);
-
-    const handleCardClick = (e) => {
-      if (e.target.tagName === "IMG" && coinValued) {
-        const rect = e.target.getBoundingClientRect();
-        setClickPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-        setShowAnimation(true);
-        setTimeout(() => setShowAnimation(false), 1000);
-
-        update(userRef, {
-          coins: coinCount + pointsToAdd,
-          // currentEnergy: currentEnergy - pointsToAdd,
-        });
-        // setCurrentEnergy(currentEnergy - pointsToAdd);
-        if (coinCount % coinLevelGap === 0 && coinCount !== 0) {
-          set(levelRef, level + 1);
-        }
-        setImageClicked(true);
-        setTimeout(() => setImageClicked(false), 500);
-
-        if (navigator.vibrate) {
-          navigator.vibrate(100);
-        }
-      }
     };
 
     return (
@@ -193,18 +184,10 @@ export default function Home() {
                         <div className="flex flex-col items-start">
                           <div className="w-full justify-between flex">
                             <p className="text-sm">Level</p>
-                            <p className="text-sm ml-2">{level}</p>
                           </div>
                           <div className="flex items-center mt-1">
                             <div className="w-20 h-2 bg-gray-700 rounded-full">
-                              <div
-                                className="h-2 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"
-                                style={{
-                                  width: `${
-                                    ((coinCount / coinLevelGap) * 100) % 100
-                                  }%`,
-                                }}
-                              ></div>
+                              <div className="h-2 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"></div>
                             </div>
                           </div>
                         </div>
@@ -213,13 +196,13 @@ export default function Home() {
                         <div className="flex items-center">
                           <FiDollarSign className="w-8 h-8 text-yellow-400 mr-2" />
                           <div className="h-[32px] w-[2px] bg-gray-700 mx-2"></div>
-                          <div className="flex-1 text-center">
+                          <div className="flex-1 text-center"> 
                             <p className="text-xs text-gray-400 font-medium">
-                              Profit per hour
+                              Yield per hour
                             </p>
                             <div className="flex items-center justify-center space-x-1">
                               <GiTwoCoins className="w-[18px] h-[18px] text-yellow-400" />
-                              <p className="text-sm">{profitPerHour}</p>
+                              <p className="text-sm">{userInfo.yieldPerHour}</p>
                             </div>
                           </div>
                           <div className="h-[32px] w-[2px] bg-gray-700 mx-2"></div>
@@ -238,20 +221,26 @@ export default function Home() {
                         {/* Adjusted width to 50% */}
                         <div className="flex justify-between w-full mb-1">
                           <p className="text-xs text-gray-600">Energy</p>
-                          <p className="text-xs text-gray-600">{`${currentEnergy}/${totalEnergy}`}</p>
+                          <p className="text-xs text-gray-600">{`${userInfo.currentEnergy}/${userInfo.totalEnergy}`}</p>
                         </div>
                         <div className="w-full h-3 bg-gray-200 rounded-full relative overflow-hidden">
                           <div
                             className="h-full bg-gradient-to-r from-green-400 to-green-600 transition-width duration-300 ease-in-out shadow-lg"
                             style={{
-                              width: `${(currentEnergy * 100) / totalEnergy}%`,
+                              width: `${
+                                (userInfo.currentEnergy * 100) /
+                                userInfo.totalEnergy
+                              }%`,
                               boxShadow: "0 0 8px rgba(0, 255, 0, 0.5)", // Added glow effect
                             }}
                           ></div>
                           <div
                             className="absolute top-0 transform -translate-x-1/2 h-3 w-3 rounded-full bg-green-500 shadow-md glow-pulse transition-left duration-300 ease-in-out"
                             style={{
-                              left: `${(currentEnergy * 100) / totalEnergy}%`,
+                              left: `${
+                                (userInfo.currentEnergy * 100) /
+                                userInfo.totalEnergy
+                              }%`,
                               boxShadow: "0 0 8px rgba(0, 255, 0, 0.5)", // Added glow effect
                             }}
                           ></div>
@@ -275,8 +264,8 @@ export default function Home() {
                             <div
                               className="click-animation"
                               style={{
-                                top: `${clickPosition.y}px`,
-                                left: `${clickPosition.x}px`,
+                                top: `${clickPosition.y - 30}px`,
+                                left: `${clickPosition.x - 30}px`,
                               }}
                             >
                               +1{" "}
@@ -285,14 +274,8 @@ export default function Home() {
                           )}
                         </div>
                         <p className="text-3xl bottom-24 text-white">
-                          {coinValued ? (
-                            <>
-                              {coinCount}{" "}
-                              <GiTwoCoins className="inline text-yellow-400" />
-                            </>
-                          ) : (
-                            "Click to earn!"
-                          )}
+                          {userInfo.coins}
+                          <GiTwoCoins className="inline text-yellow-400" />
                         </p>
                       </div>
                     </div>
@@ -312,15 +295,3 @@ export default function Home() {
     </Suspense>
   );
 }
-
-// Decrease energy every second
-// setInterval(() => {
-//   setCurrentEnergy(currentEnergy + 1);
-//   // set(currentEnergyRef, currentEnergy + 1);
-//   // setEnergyValued(false);
-// }, 1000);
-
-// Increase coins as per profit per hour
-// setInterval(() => {
-//   setCoinCount(coinCount + 1);
-// }, Math.ceil(1 / (profitPerHour / 3600)))*1000);

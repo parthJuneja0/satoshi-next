@@ -3,8 +3,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { FaYoutube, FaTelegramPlane, FaCheckCircle } from "react-icons/fa";
 import { GiTwoCoins } from "react-icons/gi";
 import { SiX } from "react-icons/si";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { onValue, ref, set } from "firebase/database";
+import { get, ref, set } from "firebase/database";
 import { realtimeDb } from "@/config/firebase";
 import useUserData from "@/hooks/useUserData";
 
@@ -13,32 +12,33 @@ const Earn = () => {
     let youtubeReward = 10000;
     let telegramReward = 5000;
     let twitterReward = 5000;
-    const [loading, setLoading] = useState(false);
-    const [coinCount, setCoinCount] = useState();
-    const [completedTasks, setCompletedTasks] = useState();
+    const [userInfo, setUserInfo] = useState({});
+    const [hasMounted, setHasMounted] = useState(false);
 
     const { userData } = useUserData();
     const userId = userData?.id || 0;
 
-    const coinRef = ref(realtimeDb, `/users/${userId}/coins`);
-    const completedTasksRef = ref(
-      realtimeDb,
-      `/users/${userId}/completedTasks`
-    );
+    const userRef = ref(realtimeDb, `/users/${userId}`);
 
+    // Fetch user details
     useEffect(() => {
-      const unsubscribe = onValue(coinRef, (snapshot) => {
-        setCoinCount(snapshot.val());
-      });
-      return () => unsubscribe();
-    }, [coinRef]);
+      const fetchUserDetails = async () => {
+        const snapshot = await get(userRef);
+        if (snapshot.exists()) {
+          setUserInfo(snapshot.val());
+          setHasMounted(true);
+        }
+      };
+      fetchUserDetails();
+    }, []);
 
+    // Sync user data with database
     useEffect(() => {
-      const unsubscribe = onValue(completedTasksRef, (snapshot) => {
-        setCompletedTasks(snapshot.val());
-      });
-      return () => unsubscribe();
-    }, [completedTasksRef]);
+      if (hasMounted) {
+        console.log(userInfo.completedTasks);
+        set(userRef, userInfo);
+      }
+    }, [userInfo, hasMounted]);
 
     const grantReward = (task) => {
       const reward = {
@@ -47,27 +47,23 @@ const Earn = () => {
         twitter: twitterReward,
       }[task];
 
-      set(coinRef, coinCount + reward);
+      setUserInfo((prevValue) => ({
+        ...prevValue,
+        coins: prevValue.coins + reward,
+      }));
     };
 
     const handleLinkClick = async (task) => {
-      setLoading(true);
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate delay
-        set(completedTasksRef, { ...completedTasks, [task]: true });
-      } finally {
-        setLoading(false);
-      }
+      if (userInfo.completedTasks && userInfo.completedTasks[task]) return;
+      setUserInfo((prevValue) => ({
+        ...prevValue,
+        completedTasks: { ...prevValue.completedTasks, [task]: true },
+      }));
       grantReward(task);
     };
 
     return (
       <div className="bg-gradient-to-b from-gray-900 to-black flex justify-center items-center min-h-screen">
-        {loading && (
-          <div className="absolute z-50 flex items-center justify-center bg-black bg-opacity-75 w-full h-full">
-            <AiOutlineLoading3Quarters className="text-white text-6xl animate-spin" />
-          </div>
-        )}
         <div className="w-full h-full rounded-3xl p-6 text-white max-w-md relative">
           <div className="flex justify-center mb-8">
             <GiTwoCoins className="text-yellow-400 text-9xl shadow-lg animate-pulse transition-transform duration-500 ease-in-out transform hover:scale-110 glow-coin" />
@@ -104,7 +100,7 @@ const Earn = () => {
                     </p>
                   </div>
                 </div>
-                {completedTasks && completedTasks.youtube && (
+                {userInfo.completedTasks && userInfo.completedTasks.youtube && (
                   <FaCheckCircle className="text-green-500 text-3xl checkmark" />
                 )}
               </div>
@@ -134,9 +130,10 @@ const Earn = () => {
                     </p>
                   </div>
                 </div>
-                {completedTasks && completedTasks.telegram && (
-                  <FaCheckCircle className="text-green-500 text-3xl checkmark" />
-                )}
+                {userInfo.completedTasks &&
+                  userInfo.completedTasks.telegram && (
+                    <FaCheckCircle className="text-green-500 text-3xl checkmark" />
+                  )}
               </div>
             </a>
             <a
@@ -164,7 +161,7 @@ const Earn = () => {
                     </p>
                   </div>
                 </div>
-                {completedTasks && completedTasks.twitter && (
+                {userInfo.completedTasks && userInfo.completedTasks.twitter && (
                   <FaCheckCircle className="text-green-500 text-3xl checkmark" />
                 )}
               </div>
