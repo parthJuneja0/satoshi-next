@@ -50,6 +50,7 @@ export default function Home() {
     const usersRef = ref(realtimeDb, `/users`);
     const userRef = ref(realtimeDb, `/users/${userId}`);
 
+    // fetch user data
     useEffect(() => {
       const fetchUserDetails = async () => {
         const snapshot = await get(userRef);
@@ -77,6 +78,7 @@ export default function Home() {
       fetchUserDetails();
     }, []);
 
+    // Sync user data with database
     useEffect(() => {
       if (hasMounted) {
         set(userRef, userInfo);

@@ -16,7 +16,6 @@ const Mine = () => {
     const [showUnlockModal, setShowUnlockModal] = useState(false);
     const [selectedCard, setSelectedCard] = useState(null);
     const [unlockCondition, setUnlockCondition] = useState("");
-    const [level, setLevel] = useState();
     const [coinCount, setCoinCount] = useState();
     const [profitPerHour, setProfitPerHour] = useState();
     const [cardLevels, setCardLevels] = useState({});
@@ -24,17 +23,9 @@ const Mine = () => {
     const { userData } = useUserData();
     const userId = userData?.id || 0;
 
-    const levelRef = ref(realtimeDb, `/users/${userId}/level`);
     const coinRef = ref(realtimeDb, `/users/${userId}/coins`);
     const profitPerHourRef = ref(realtimeDb, `/users/${userId}/profitPerHour`);
     const cardLevelsRef = ref(realtimeDb, `/users/${userId}/cardLevels`);
-
-    useEffect(() => {
-      const unsubscribe = onValue(levelRef, (snapshot) => {
-        setLevel(snapshot.val());
-      });
-      return () => unsubscribe();
-    }, [levelRef]);
 
     useEffect(() => {
       const unsubscribe = onValue(coinRef, (snapshot) => {
@@ -191,7 +182,8 @@ const Mine = () => {
               <p>lvl {card.level}</p>
               <div className="vertical-separator"></div>
               <p>
-                <GiTwoCoins className="footer-icon bright-coin-icon" /> {card.price}
+                <GiTwoCoins className="footer-icon bright-coin-icon" />{" "}
+                {card.price}
               </p>
             </div>
           </div>
